@@ -9,7 +9,7 @@ import toml
 __all__ = ['Question', 'QualtricsSurvey']
 
 config = dict(
-    API_BASE_URL=None,  # e.g. 'https://subdomain.qualtrics.com/API/v3/'
+    API_URL=None,  # e.g. 'https://subdomain.qualtrics.com/API/v3/'
     API_TOKEN=None,
     LIBRARY_ID=None,
     SURVEY_ID=None,
@@ -130,8 +130,16 @@ class QualtricsSurvey:
         survey_id: str = config['SURVEY_ID'],
         library_id: str = config['LIBRARY_ID'],
         api_token: str = config['API_TOKEN'],
-        api_url: str = config['API_BASE_URL'],
+        api_url: str = config['API_URL'],
     ):
+        """Constructor for the QualtricsSurvey
+
+        Args:
+            survey_id (str, optional): Survey ID. Defaults to config['SURVEY_ID'] (loaded from ~/.qualtrutils/qualtrics.toml).
+            library_id (str, optional): Files Library ID. Defaults to config['LIBRARY_ID'] (loaded from ~/.qualtrutils/qualtrics.toml).
+            api_token (str, optional): Qualtrics API Token. Defaults to config['API_TOKEN'] (loaded from ~/.qualtrutils/qualtrics.toml).
+            api_url (str, optional): Qualtrics Server URL. Defaults to config['API_URL'] (loaded from ~/.qualtrutils/qualtrics.toml).
+        """
         self._api_url = api_url
         self._api_token = api_token
         self._survey_id = survey_id

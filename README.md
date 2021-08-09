@@ -9,16 +9,18 @@ git clone https://github.com/emanuele-albini/qualtrutils.git
 pip install --editable qualtrutils
 ```
 
-To add a global configuration add in `~\.qualtrutils\qualtrics.toml` the desired configuration:
+## Configuration (optional)
+
+Global configuration is in `~\.qualtrutils\qualtrics.toml`. Example:
 
 ```toml
-API_BASE_URL = "https://yourdatacenter.qualtrics.com/API/v3/"
+API_URL = "https://yourdatacenter.qualtrics.com/API/v3/"
 API_TOKEN = "your_token"
 LIBRARY_ID = "UR_XXXXXXXXXXXXX"
 SURVEY_ID = "SV_XXXXXXXXXXXXX"
 ```
 
-This configuration will be used as default in the constructor of `QualtricsSurvey`.
+The configuration saved in `~\.qualtrutils\qualtrics.toml` will be used as default in `QualtricsSurvey` constructor.
 
 ## Usage example
 
@@ -45,3 +47,7 @@ question.set_js('var hello = 1;')
 # If the block does not exists it will be created
 survey.create_question(question, 'Block A')
 ```
+
+## Documentation
+
+See [here](https://emanuele-albini.github.io/qualtrutils) for the complete documentation with all the functionalities.
