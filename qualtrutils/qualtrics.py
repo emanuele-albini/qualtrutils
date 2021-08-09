@@ -2,6 +2,7 @@ import os
 import re
 from typing import List, Dict
 from posixpath import join as urljoin
+from os.path import join as pathjoin
 
 import requests
 from tqdm import tqdm
@@ -9,7 +10,7 @@ import toml
 
 __all__ = ['Question', 'QualtricsSurvey']
 
-CONFIG_FILE = os.path.join(os.path.expanduser("~"), '.qualtrutils/qualtrics.toml')
+CONFIG_FILE = pathjoin(pathjoin(os.path.expanduser("~"), '.qualtrutils'), 'qualtrics.toml')
 
 
 class Question(dict):
