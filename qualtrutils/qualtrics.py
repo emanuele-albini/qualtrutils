@@ -1,6 +1,7 @@
 import os
 import re
 from typing import List, Dict
+from posixpath import join as urljoin
 
 import requests
 from tqdm import tqdm
@@ -8,17 +9,7 @@ import toml
 
 __all__ = ['Question', 'QualtricsSurvey']
 
-config = dict(
-    API_URL=None,  # e.g. 'https://subdomain.qualtrics.com/API/v3/'
-    API_TOKEN=None,
-    LIBRARY_ID=None,
-    SURVEY_ID=None,
-)
-
 CONFIG_FILE = os.path.join(os.path.expanduser("~"), '.qualtrutils/qualtrics.toml')
-
-if os.path.exists(CONFIG_FILE):
-    config.update(toml.load(CONFIG_FILE))
 
 
 class Question(dict):
@@ -127,10 +118,11 @@ class QualtricsSurvey:
     """
     def __init__(
         self,
-        survey_id: str = config['SURVEY_ID'],
-        library_id: str = config['LIBRARY_ID'],
-        api_token: str = config['API_TOKEN'],
-        api_url: str = config['API_URL'],
+        survey_id: str = None,
+        library_id: str = None,
+        api_token: str = None,
+        api_url: str = None,
+        config_file: str = CONFIG_FILE,
     ):
         """Constructor for the QualtricsSurvey
 
@@ -140,10 +132,19 @@ class QualtricsSurvey:
             api_token (str, optional): Qualtrics API Token. Defaults to config['API_TOKEN'] (loaded from ~/.qualtrutils/qualtrics.toml).
             api_url (str, optional): Qualtrics Server URL. Defaults to config['API_URL'] (loaded from ~/.qualtrutils/qualtrics.toml).
         """
-        self._api_url = api_url
-        self._api_token = api_token
-        self._survey_id = survey_id
-        self._library_id = library_id
+        config = dict(
+            API_URL=None,  # e.g. 'https://subdomain.qualtrics.com/API/v3/'
+            API_TOKEN=None,
+            SURVEY_ID=None,
+            LIBRARY_ID=None,
+        )
+        if os.path.exists(config_file):
+            config.update(toml.load(config_file))
+
+        self._api_url = api_url if api_url is not None else config['API_URL']
+        self._api_token = api_token if api_token is not None else config['API_TOKEN']
+        self._survey_id = survey_id if survey_id is not None else config['SURVEY_ID']
+        self._library_id = library_id if library_id is not None else config['LIBRARY_ID']
 
         self.block_ids = {}
         self.questions_cache = None
@@ -183,7 +184,7 @@ class QualtricsSurvey:
         Returns:
             Question : The questsion that has been created.
         """
-        question = self.get_question_template_by_name(template_name, new_name)
+        question = self.get_question_by_name(template_name, new_name)
         return self.create_question(question, block_name)
 
     def get_question_by_name(self, template_name: str, new_name: str) -> Question:
@@ -268,28 +269,28 @@ class QualtricsSurvey:
         return self.__get(self.__api_flow())
 
     def __get_block_by_id(self, block_id):
-        return self.__get(os.path.join(self.__api_block(), block_id))
+        return self.__get(urljoin(self.__api_block(), block_id))
 
     def __delete_block_by_id(self, block_id):
-        return self.__delete(os.path.join(self.__api_block(), block_id))
+        return self.__delete(urljoin(self.__api_block(), block_id))
 
     def __api_survey(self):
-        return os.path.join(self.api_url, 'survey-definitions', self.survey_id)
+        return urljoin(urljoin(self.api_url, 'survey-definitions'), self.survey_id)
 
     def __api_questions(self):
-        return os.path.join(self.__api_survey(), 'questions')
+        return urljoin(self.__api_survey(), 'questions')
 
     def __api_flow(self):
-        return os.path.join(self.__api_survey(), 'flow')
+        return urljoin(self.__api_survey(), 'flow')
 
     def __api_block(self):
-        return os.path.join(self.__api_survey(), 'blocks')
+        return urljoin(self.__api_survey(), 'blocks')
 
     def __api_library(self):
-        return os.path.join(self.api_url, 'libraries', self.library_id)
+        return urljoin(urljoin(self.api_url, 'libraries'), self.library_id)
 
     def __api_graphics(self):
-        return os.path.join(self.__api_library(), 'graphics')
+        return urljoin(self.__api_library(), 'graphics')
 
     def __get(self, api_url):
         response = requests.get(api_url, headers=self.__headers())
