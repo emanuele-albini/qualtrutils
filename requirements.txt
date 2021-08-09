@@ -5,3 +5,4 @@ yapf
 pdoc3
 build
 twine
+pytest
