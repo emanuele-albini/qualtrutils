@@ -25,10 +25,12 @@
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L0-L334" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">import os
 import re
 from typing import List, Dict
+from posixpath import join as urljoin
 
 import requests
 from tqdm import tqdm
@@ -36,17 +38,7 @@ import toml
 
 __all__ = [&#39;Question&#39;, &#39;QualtricsSurvey&#39;]
 
-config = dict(
-    API_URL=None,  # e.g. &#39;https://subdomain.qualtrics.com/API/v3/&#39;
-    API_TOKEN=None,
-    LIBRARY_ID=None,
-    SURVEY_ID=None,
-)
-
 CONFIG_FILE = os.path.join(os.path.expanduser(&#34;~&#34;), &#39;.qualtrutils/qualtrics.toml&#39;)
-
-if os.path.exists(CONFIG_FILE):
-    config.update(toml.load(CONFIG_FILE))
 
 
 class Question(dict):
@@ -155,15 +147,33 @@ class QualtricsSurvey:
     &#34;&#34;&#34;
     def __init__(
         self,
-        survey_id: str = config[&#39;SURVEY_ID&#39;],
-        library_id: str = config[&#39;LIBRARY_ID&#39;],
-        api_token: str = config[&#39;API_TOKEN&#39;],
-        api_url: str = config[&#39;API_URL&#39;],
+        survey_id: str = None,
+        library_id: str = None,
+        api_token: str = None,
+        api_url: str = None,
+        config_file: str = CONFIG_FILE,
     ):
-        self._api_url = api_url
-        self._api_token = api_token
-        self._survey_id = survey_id
-        self._library_id = library_id
+        &#34;&#34;&#34;Constructor for the QualtricsSurvey
+
+        Args:
+            survey_id (str, optional): Survey ID. Defaults to config[&#39;SURVEY_ID&#39;] (loaded from ~/.qualtrutils/qualtrics.toml).
+            library_id (str, optional): Files Library ID. Defaults to config[&#39;LIBRARY_ID&#39;] (loaded from ~/.qualtrutils/qualtrics.toml).
+            api_token (str, optional): Qualtrics API Token. Defaults to config[&#39;API_TOKEN&#39;] (loaded from ~/.qualtrutils/qualtrics.toml).
+            api_url (str, optional): Qualtrics Server URL. Defaults to config[&#39;API_URL&#39;] (loaded from ~/.qualtrutils/qualtrics.toml).
+        &#34;&#34;&#34;
+        config = dict(
+            API_URL=None,  # e.g. &#39;https://subdomain.qualtrics.com/API/v3/&#39;
+            API_TOKEN=None,
+            SURVEY_ID=None,
+            LIBRARY_ID=None,
+        )
+        if os.path.exists(config_file):
+            config.update(toml.load(config_file))
+
+        self._api_url = api_url if api_url is not None else config[&#39;API_URL&#39;]
+        self._api_token = api_token if api_token is not None else config[&#39;API_TOKEN&#39;]
+        self._survey_id = survey_id if survey_id is not None else config[&#39;SURVEY_ID&#39;]
+        self._library_id = library_id if library_id is not None else config[&#39;LIBRARY_ID&#39;]
 
         self.block_ids = {}
         self.questions_cache = None
@@ -203,7 +213,7 @@ class QualtricsSurvey:
         Returns:
             Question : The questsion that has been created.
         &#34;&#34;&#34;
-        question = self.get_question_template_by_name(template_name, new_name)
+        question = self.get_question_by_name(template_name, new_name)
         return self.create_question(question, block_name)
 
     def get_question_by_name(self, template_name: str, new_name: str) -&gt; Question:
@@ -288,28 +298,28 @@ class QualtricsSurvey:
         return self.__get(self.__api_flow())
 
     def __get_block_by_id(self, block_id):
-        return self.__get(os.path.join(self.__api_block(), block_id))
+        return self.__get(urljoin(self.__api_block(), block_id))
 
     def __delete_block_by_id(self, block_id):
-        return self.__delete(os.path.join(self.__api_block(), block_id))
+        return self.__delete(urljoin(self.__api_block(), block_id))
 
     def __api_survey(self):
-        return os.path.join(self.api_url, &#39;survey-definitions&#39;, self.survey_id)
+        return urljoin(urljoin(self.api_url, &#39;survey-definitions&#39;), self.survey_id)
 
     def __api_questions(self):
-        return os.path.join(self.__api_survey(), &#39;questions&#39;)
+        return urljoin(self.__api_survey(), &#39;questions&#39;)
 
     def __api_flow(self):
-        return os.path.join(self.__api_survey(), &#39;flow&#39;)
+        return urljoin(self.__api_survey(), &#39;flow&#39;)
 
     def __api_block(self):
-        return os.path.join(self.__api_survey(), &#39;blocks&#39;)
+        return urljoin(self.__api_survey(), &#39;blocks&#39;)
 
     def __api_library(self):
-        return os.path.join(self.api_url, &#39;libraries&#39;, self.library_id)
+        return urljoin(urljoin(self.api_url, &#39;libraries&#39;), self.library_id)
 
     def __api_graphics(self):
-        return os.path.join(self.__api_library(), &#39;graphics&#39;)
+        return urljoin(self.__api_library(), &#39;graphics&#39;)
 
     def __get(self, api_url):
         response = requests.get(api_url, headers=self.__headers())
@@ -365,17 +375,30 @@ class QualtricsSurvey:
 <dl>
 <dt id="qualtrutils.qualtrics.QualtricsSurvey"><code class="flex name class">
 <span>class <span class="ident">QualtricsSurvey</span></span>
-<span>(</span><span>survey_id: str = None, library_id: str = None, api_token: str = 'SRJ59XlEL1cFdai9oLunkKjGhNnGv94Y1zDNgxYh', api_url: str = 'https://imperial.eu.qualtrics.com/API/v3/')</span>
+<span>(</span><span>survey_id: str = None, library_id: str = None, api_token: str = None, api_url: str = None, config_file: str = 'C:\\Users\\Emanuele\\.qualtrutils/qualtrics.toml')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Class for easy handling of Qualtrics Surveys API</p>
 <p>Note: it is not possible to add questions to existing blocks. A new one will be automatically created.</p>
 <p>Note: Question are cached. If the question is change remotely (on the qualtrics interface) you must:
 - call reset_questions_cache, or
-- recreate this object</p></div>
+- recreate this object</p>
+<p>Constructor for the QualtricsSurvey</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>survey_id</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Survey ID. Defaults to config['SURVEY_ID'] (loaded from ~/.qualtrutils/qualtrics.toml).</dd>
+<dt><strong><code>library_id</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Files Library ID. Defaults to config['LIBRARY_ID'] (loaded from ~/.qualtrutils/qualtrics.toml).</dd>
+<dt><strong><code>api_token</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Qualtrics API Token. Defaults to config['API_TOKEN'] (loaded from ~/.qualtrutils/qualtrics.toml).</dd>
+<dt><strong><code>api_url</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Qualtrics Server URL. Defaults to config['API_URL'] (loaded from ~/.qualtrutils/qualtrics.toml).</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L108-L335" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">class QualtricsSurvey:
     &#34;&#34;&#34;Class for easy handling of Qualtrics Surveys API
@@ -390,15 +413,33 @@ class QualtricsSurvey:
     &#34;&#34;&#34;
     def __init__(
         self,
-        survey_id: str = config[&#39;SURVEY_ID&#39;],
-        library_id: str = config[&#39;LIBRARY_ID&#39;],
-        api_token: str = config[&#39;API_TOKEN&#39;],
-        api_url: str = config[&#39;API_URL&#39;],
+        survey_id: str = None,
+        library_id: str = None,
+        api_token: str = None,
+        api_url: str = None,
+        config_file: str = CONFIG_FILE,
     ):
-        self._api_url = api_url
-        self._api_token = api_token
-        self._survey_id = survey_id
-        self._library_id = library_id
+        &#34;&#34;&#34;Constructor for the QualtricsSurvey
+
+        Args:
+            survey_id (str, optional): Survey ID. Defaults to config[&#39;SURVEY_ID&#39;] (loaded from ~/.qualtrutils/qualtrics.toml).
+            library_id (str, optional): Files Library ID. Defaults to config[&#39;LIBRARY_ID&#39;] (loaded from ~/.qualtrutils/qualtrics.toml).
+            api_token (str, optional): Qualtrics API Token. Defaults to config[&#39;API_TOKEN&#39;] (loaded from ~/.qualtrutils/qualtrics.toml).
+            api_url (str, optional): Qualtrics Server URL. Defaults to config[&#39;API_URL&#39;] (loaded from ~/.qualtrutils/qualtrics.toml).
+        &#34;&#34;&#34;
+        config = dict(
+            API_URL=None,  # e.g. &#39;https://subdomain.qualtrics.com/API/v3/&#39;
+            API_TOKEN=None,
+            SURVEY_ID=None,
+            LIBRARY_ID=None,
+        )
+        if os.path.exists(config_file):
+            config.update(toml.load(config_file))
+
+        self._api_url = api_url if api_url is not None else config[&#39;API_URL&#39;]
+        self._api_token = api_token if api_token is not None else config[&#39;API_TOKEN&#39;]
+        self._survey_id = survey_id if survey_id is not None else config[&#39;SURVEY_ID&#39;]
+        self._library_id = library_id if library_id is not None else config[&#39;LIBRARY_ID&#39;]
 
         self.block_ids = {}
         self.questions_cache = None
@@ -438,7 +479,7 @@ class QualtricsSurvey:
         Returns:
             Question : The questsion that has been created.
         &#34;&#34;&#34;
-        question = self.get_question_template_by_name(template_name, new_name)
+        question = self.get_question_by_name(template_name, new_name)
         return self.create_question(question, block_name)
 
     def get_question_by_name(self, template_name: str, new_name: str) -&gt; Question:
@@ -523,28 +564,28 @@ class QualtricsSurvey:
         return self.__get(self.__api_flow())
 
     def __get_block_by_id(self, block_id):
-        return self.__get(os.path.join(self.__api_block(), block_id))
+        return self.__get(urljoin(self.__api_block(), block_id))
 
     def __delete_block_by_id(self, block_id):
-        return self.__delete(os.path.join(self.__api_block(), block_id))
+        return self.__delete(urljoin(self.__api_block(), block_id))
 
     def __api_survey(self):
-        return os.path.join(self.api_url, &#39;survey-definitions&#39;, self.survey_id)
+        return urljoin(urljoin(self.api_url, &#39;survey-definitions&#39;), self.survey_id)
 
     def __api_questions(self):
-        return os.path.join(self.__api_survey(), &#39;questions&#39;)
+        return urljoin(self.__api_survey(), &#39;questions&#39;)
 
     def __api_flow(self):
-        return os.path.join(self.__api_survey(), &#39;flow&#39;)
+        return urljoin(self.__api_survey(), &#39;flow&#39;)
 
     def __api_block(self):
-        return os.path.join(self.__api_survey(), &#39;blocks&#39;)
+        return urljoin(self.__api_survey(), &#39;blocks&#39;)
 
     def __api_library(self):
-        return os.path.join(self.api_url, &#39;libraries&#39;, self.library_id)
+        return urljoin(urljoin(self.api_url, &#39;libraries&#39;), self.library_id)
 
     def __api_graphics(self):
-        return os.path.join(self.__api_library(), &#39;graphics&#39;)
+        return urljoin(self.__api_library(), &#39;graphics&#39;)
 
     def __get(self, api_url):
         response = requests.get(api_url, headers=self.__headers())
@@ -596,6 +637,7 @@ class QualtricsSurvey:
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L158-L162" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">@property
 def api_token(self):
@@ -610,6 +652,7 @@ def api_token(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L152-L156" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">@property
 def api_url(self):
@@ -624,6 +667,7 @@ def api_url(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L170-L174" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">@property
 def library_id(self):
@@ -638,6 +682,7 @@ def library_id(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L164-L168" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">@property
 def survey_id(self):
@@ -671,6 +716,7 @@ def survey_id(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L176-L188" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def copy_question_by_name(self, template_name: str, new_name: str, block_name: str) -&gt; Question:
     &#34;&#34;&#34;Copy an exisiting question to a specified block
@@ -683,7 +729,7 @@ def survey_id(self):
     Returns:
         Question : The questsion that has been created.
     &#34;&#34;&#34;
-    question = self.get_question_template_by_name(template_name, new_name)
+    question = self.get_question_by_name(template_name, new_name)
     return self.create_question(question, block_name)</code></pre>
 </details>
 </dd>
@@ -700,6 +746,7 @@ def survey_id(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L233-L251" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def create_block(self, block_name: str):
     &#34;&#34;&#34;Create a block
@@ -737,6 +784,7 @@ def survey_id(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L222-L231" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def create_question(self, new_question: Question, block_name: str):
     &#34;&#34;&#34;Create a question in the survey
@@ -760,6 +808,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L253-L261" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def delete_all_blocks(self):
     &#34;&#34;&#34;Delete all blocks that have been created from the survey.
@@ -785,6 +834,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L263-L269" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def get_flow(self):
     &#34;&#34;&#34;Get the survey flow
@@ -815,6 +865,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L190-L202" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def get_question_by_name(self, template_name: str, new_name: str) -&gt; Question:
     &#34;&#34;&#34;Get an existing question by name
@@ -840,6 +891,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L214-L220" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def reset_questions_cache(self):
     &#34;&#34;&#34;
@@ -862,6 +914,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L15-L105" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">class Question(dict):
     &#34;&#34;&#34; 
@@ -976,6 +1029,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L42-L53" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def set_choices(self, choices: List[str]):
     &#34;&#34;&#34;Set multiple choice question answers with the passed ones.
@@ -999,6 +1053,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L35-L40" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def set_js(self, js: str):
     &#34;&#34;&#34;
@@ -1021,6 +1076,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L26-L33" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def set_name(self, name: str):
     &#34;&#34;&#34;Changes Question Name 
@@ -1045,6 +1101,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L55-L67" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def set_sliders_starting_position(self, pos: float):
     &#34;&#34;&#34;Set the slider initial position
@@ -1080,6 +1137,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L69-L86" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def text_sub(self, sub_map: Dict[str, str]):
     &#34;&#34;&#34;Substitute (using Python regex) the occurences in the passed substitution map

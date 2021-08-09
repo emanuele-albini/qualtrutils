@@ -1,4 +1,4 @@
-pdoc --html --force --output-dir --template-dir docs/templates docs .
+pdoc --html --force --output-dir docs --template-dir docs/templates .
 python -m build
-python -m twine upload --repository --skip-existing testpypi dist/*
-python -m twine upload --repository --skip-existing pypi dist/*
+python -m twine upload --repository testpypi --skip-existing dist/*
+python -m twine upload --repository pypi --skip-existing dist/*
