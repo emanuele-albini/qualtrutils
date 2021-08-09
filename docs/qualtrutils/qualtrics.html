@@ -25,12 +25,13 @@
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L0-L334" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L0-L335" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">import os
 import re
 from typing import List, Dict
 from posixpath import join as urljoin
+from os.path import join as pathjoin
 
 import requests
 from tqdm import tqdm
@@ -38,7 +39,7 @@ import toml
 
 __all__ = [&#39;Question&#39;, &#39;QualtricsSurvey&#39;]
 
-CONFIG_FILE = os.path.join(os.path.expanduser(&#34;~&#34;), &#39;.qualtrutils/qualtrics.toml&#39;)
+CONFIG_FILE = pathjoin(pathjoin(os.path.expanduser(&#34;~&#34;), &#39;.qualtrutils&#39;), &#39;qualtrics.toml&#39;)
 
 
 class Question(dict):
@@ -375,7 +376,7 @@ class QualtricsSurvey:
 <dl>
 <dt id="qualtrutils.qualtrics.QualtricsSurvey"><code class="flex name class">
 <span>class <span class="ident">QualtricsSurvey</span></span>
-<span>(</span><span>survey_id: str = None, library_id: str = None, api_token: str = None, api_url: str = None, config_file: str = 'C:\\Users\\Emanuele\\.qualtrutils/qualtrics.toml')</span>
+<span>(</span><span>survey_id: str = None, library_id: str = None, api_token: str = None, api_url: str = None, config_file: str = 'C:\\Users\\Emanuele\\.qualtrutils\\qualtrics.toml')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Class for easy handling of Qualtrics Surveys API</p>
@@ -398,7 +399,7 @@ class QualtricsSurvey:
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L108-L335" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L109-L336" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">class QualtricsSurvey:
     &#34;&#34;&#34;Class for easy handling of Qualtrics Surveys API
@@ -637,7 +638,7 @@ class QualtricsSurvey:
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L158-L162" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L159-L163" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">@property
 def api_token(self):
@@ -652,7 +653,7 @@ def api_token(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L152-L156" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L153-L157" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">@property
 def api_url(self):
@@ -667,7 +668,7 @@ def api_url(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L170-L174" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L171-L175" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">@property
 def library_id(self):
@@ -682,7 +683,7 @@ def library_id(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L164-L168" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L165-L169" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">@property
 def survey_id(self):
@@ -716,7 +717,7 @@ def survey_id(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L176-L188" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L177-L189" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def copy_question_by_name(self, template_name: str, new_name: str, block_name: str) -&gt; Question:
     &#34;&#34;&#34;Copy an exisiting question to a specified block
@@ -746,7 +747,7 @@ def survey_id(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L233-L251" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L234-L252" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def create_block(self, block_name: str):
     &#34;&#34;&#34;Create a block
@@ -784,7 +785,7 @@ def survey_id(self):
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L222-L231" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L223-L232" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def create_question(self, new_question: Question, block_name: str):
     &#34;&#34;&#34;Create a question in the survey
@@ -808,7 +809,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L253-L261" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L254-L262" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def delete_all_blocks(self):
     &#34;&#34;&#34;Delete all blocks that have been created from the survey.
@@ -834,7 +835,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L263-L269" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L264-L270" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def get_flow(self):
     &#34;&#34;&#34;Get the survey flow
@@ -865,7 +866,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L190-L202" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L191-L203" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def get_question_by_name(self, template_name: str, new_name: str) -&gt; Question:
     &#34;&#34;&#34;Get an existing question by name
@@ -891,7 +892,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L214-L220" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L215-L221" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def reset_questions_cache(self):
     &#34;&#34;&#34;
@@ -914,7 +915,7 @@ Use with care!! The operation is not easily reversible.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L15-L105" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L16-L106" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">class Question(dict):
     &#34;&#34;&#34; 
@@ -1029,7 +1030,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L42-L53" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L43-L54" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def set_choices(self, choices: List[str]):
     &#34;&#34;&#34;Set multiple choice question answers with the passed ones.
@@ -1053,7 +1054,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L35-L40" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L36-L41" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def set_js(self, js: str):
     &#34;&#34;&#34;
@@ -1076,7 +1077,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L26-L33" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L27-L34" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def set_name(self, name: str):
     &#34;&#34;&#34;Changes Question Name 
@@ -1101,7 +1102,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L55-L67" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L56-L68" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def set_sliders_starting_position(self, pos: float):
     &#34;&#34;&#34;Set the slider initial position
@@ -1137,7 +1138,7 @@ List of answers (str)</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/8ecc17c9221f2d83f3e9bc34b7aca66ba7dd0770/qualtrutils\qualtrics.py#L69-L86" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/f8d8ce7855fb89c2e3ef1ca19d247c5bf0864de9/qualtrutils\qualtrics.py#L70-L87" class="git-link">Browse git</a>
 </summary>
 <pre><code class="python">def text_sub(self, sub_map: Dict[str, str]):
     &#34;&#34;&#34;Substitute (using Python regex) the occurences in the passed substitution map
