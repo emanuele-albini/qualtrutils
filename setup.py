@@ -18,6 +18,7 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
+        "Development Status :: 5 - Production/Stable",
     ],
     package_dir={"": "."},
     packages=['qualtrutils'],
@@ -38,4 +39,3 @@ CONFIG_FILE = os.path.join(CONFIG_DIR, 'qualtrics.toml')
 # Create config dir
 if not os.path.exists(CONFIG_DIR):
     os.makedirs(CONFIG_DIR)
-
