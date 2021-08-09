@@ -13,12 +13,15 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/emanuele-albini/qualtrutils",
     project_urls={
+        "Documentation": "https://emanuele-albini.github.io/qualtrutils",
         "Bug Tracker": "https://github.com/emanuele-albini/qualtrutils/issues",
+        "Author Website": "https://www.emanuelealbini.com",
     },
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
         "Development Status :: 5 - Production/Stable",
+        "License :: OSI Approved :: MIT License",
     ],
     package_dir={"": "."},
     packages=['qualtrutils'],
@@ -28,7 +31,8 @@ setuptools.setup(
         'tqdm',
         'toml',
         'requests',
-    ]
+    ],
+    keywords=['Qualtrics', 'API', 'surveys'],
 )
 
 # Create configuration
