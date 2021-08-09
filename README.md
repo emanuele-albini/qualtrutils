@@ -1,4 +1,9 @@
 # Utility package to interact with Qualtrics (v3) API
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/qualtrutils.svg)](https://pypi.python.org/pypi/qualtrutils/)
+[![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/emanuele-albini/qualtrutils/blob/master/LICENSE)
+[![PyPI](https://badge.fury.io/py/qualtrutils.svg)](https://pypi.python.org/pypi/qualtrutils/)
+[![GitHub commits](https://img.shields.io/github/commits-since/emanuele-albini/qualtrutils/v0.0.1)](https://github.com/emanuele-albini/qualtrutils/commit/)
+[![Maintaner](https://img.shields.io/badge/maintainer-Emanuele-lightgrey)](https://www.emanuelealbini.com)
 
 ## Installation
 
