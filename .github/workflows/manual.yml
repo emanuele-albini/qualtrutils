@@ -14,8 +14,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        pythonVersion: [3.6]
+        os: [ubuntu-latest, windows-latest]
+        pythonVersion: [3.6, 3.7, 3.8, 3.9]
         
     steps:
     - uses: actions/checkout@v2
@@ -29,7 +29,9 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install dependencies
       run: |
-        conda install jinja2
+        echo $GITHUB_PATH
+        echo $PATH
+        conda.exe install jinja2
         conda install conda-build anaconda-client
     - name: Generate metadata for conda
       run: python meta.py
