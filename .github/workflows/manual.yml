@@ -19,20 +19,13 @@ jobs:
         
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.pythonVersion }}
-    - name: Add conda to system path
-      run: |
-        # $env:CONDA is an environment variable pointing to the root of the miniconda directory
-        echo $env:CONDA/bin >> $env:GITHUB_PATH
+    - uses: conda-incubator/setup-miniconda@v2
+        with:
+          auto-update-conda: true
+          python-version: ${{ matrix.pythonVersion }}
     - name: Install dependencies
-      run: |
-        echo $env:GITHUB_PATH
-        echo $env:PATH
-        ls $env:CONDA/bin
-        conda.exe install jinja2
+      run:
+        conda install jinja2
         conda install conda-build anaconda-client
     - name: Generate metadata for conda
       run: python meta.py
