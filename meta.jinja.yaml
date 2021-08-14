@@ -1,0 +1,34 @@
+package:
+  name: "{{ name }}"
+  version: "{{ version }}"
+
+source:
+  path: .
+
+build:
+  number: 0
+  preserve_egg_dir: True
+  script: "{{ "{{ PYTHON }}" }} -m pip install . -vv"
+
+requirements:
+  host:
+    - pip
+    - python{% for package in install_requires %}
+    - {{ package }}{% endfor %}
+
+  run:
+    - python{% for package in install_requires %}
+    - {{ package }}{% endfor %}
+
+test:
+  imports:
+    - {{ name }}
+
+about:
+  home: "{{ home }}"
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: "{{ description }}"
+  doc_url: "{{ doc_url }}"
+  dev_url: "{{ dev_url }}"
