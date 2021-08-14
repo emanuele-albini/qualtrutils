@@ -1,0 +1,32 @@
+# This is a basic workflow that is manually triggered
+
+name: Manual workflow
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Manual trigger'
+jobs:
+  conda:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        pythonVersion: [3.6, 3.7, 3.8, 3.9]
+        
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: pip install jinja2
+    - name: Generate metadata for conda
+      run: python meta.py
+    - name: Anaconda Action (Build & Upload)
+      id: step1
+      uses: fdiblen/anaconda-action@0.1.7
+      with:
+        anacondaToken: ${{ secrets.ANACONDA_TOKEN }}
+        pythonVersion: ${{ pythonVersion }}
+        publish: true
