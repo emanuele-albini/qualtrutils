@@ -28,6 +28,6 @@ jobs:
       uses: fdiblen/anaconda-action@0.1.7
       with:
         anacondaToken: ${{ secrets.ANACONDA_TOKEN }}
-        pythonVersion: ${{ pythonVersion }}
+        pythonVersion: ${{ matrix.pythonVersion }}
         publish: true
         publishChannel: emanuele-albini
