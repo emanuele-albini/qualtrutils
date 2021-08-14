@@ -30,3 +30,4 @@ jobs:
         anacondaToken: ${{ secrets.ANACONDA_TOKEN }}
         pythonVersion: ${{ pythonVersion }}
         publish: true
+        publishChannel: emanuele-albini
