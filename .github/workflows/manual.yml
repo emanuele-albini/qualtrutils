@@ -25,13 +25,13 @@ jobs:
         python-version: ${{ matrix.pythonVersion }}
     - name: Add conda to system path
       run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        echo $CONDA/bin >> $GITHUB_PATH
+        # $env:CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $env:CONDA/bin >> $env:GITHUB_PATH
     - name: Install dependencies
       run: |
-        echo $GITHUB_PATH
-        echo $PATH
-        conda.exe install jinja2
+        echo $env:GITHUB_PATH
+        echo $env:PATH
+        conda install jinja2
         conda install conda-build anaconda-client
     - name: Generate metadata for conda
       run: python meta.py
