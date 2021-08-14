@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="qualtrutils",
-    version="0.1.0b",
+    version="0.1.0c",
     author="Emanuele Albini",
     description="A simple package to interact with the Qualtrics API",
     long_description=long_description,
@@ -19,6 +19,10 @@ setuptools.setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Operating System :: OS Independent",
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: MIT License",
