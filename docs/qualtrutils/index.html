@@ -25,9 +25,16 @@
 <details class="source">
 <summary>
 <span>Expand source code</span>
-<a href="https://github.com/emanuele-albini/qualtrutils/blob/09e6899ae059b5770462be1e67e7983dae20c622/qualtrutils/__init__.py#L1-L1" class="git-link">Browse git</a>
+<a href="https://github.com/emanuele-albini/qualtrutils/blob/74d9e5affc5a28b8c002ab4b2527345e6f065c3b/src/qualtrutils/__init__.py#L1-L8" class="git-link">Browse git</a>
 </summary>
-<pre><code class="python">from .qualtrics import *</code></pre>
+<pre><code class="python">try:
+    import os
+    import pkg_resources  # part of setuptools
+    __version__ = pkg_resources.get_distribution(os.path.dirname(__file__)).version
+except:
+    pass
+
+from .qualtrics import *</code></pre>
 </details>
 </section>
 <section>
