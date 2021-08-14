@@ -32,4 +32,6 @@ jobs:
         author_name: GitHub Actions
         message: 'Update to documentation'
         add: 'docs'
+        branch: master
+
       
