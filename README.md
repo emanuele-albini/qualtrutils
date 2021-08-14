@@ -4,7 +4,8 @@
 [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/emanuele-albini/qualtrutils/blob/master/LICENSE)
 [![PyPI](https://badge.fury.io/py/qualtrutils.svg)](https://pypi.python.org/pypi/qualtrutils/)
 [![Maintaner](https://img.shields.io/badge/maintainer-Emanuele-lightgrey)](https://www.emanuelealbini.com)
-[![Tests](https://github.com/emanuele-albini/qualtrutils/actions/workflows/python-test.yml/badge.svg)](https://github.com/emanuele-albini/qualtrutils/actions/workflows/python-test.yml)
+[![Tests](https://github.com/emanuele-albini/qualtrutils/actions/workflows/tests.yml/badge.svg)](https://github.com/emanuele-albini/qualtrutils/actions/workflows/tests.yml)
+[![Release](https://github.com/emanuele-albini/qualtrutils/actions/workflows/release.yml/badge.svg)](https://github.com/emanuele-albini/qualtrutils/actions/workflows/release.yml)
 
 This package allows the creation of questions based on an existing template (i.e., a question created with the Qualtrics interface. The operations that this package supports are:
 
