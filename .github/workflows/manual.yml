@@ -31,7 +31,8 @@ jobs:
       run: |
         echo $env:GITHUB_PATH
         echo $env:PATH
-        conda install jinja2
+        ls $env:CONDA/bin
+        conda.exe install jinja2
         conda install conda-build anaconda-client
     - name: Generate metadata for conda
       run: python meta.py
