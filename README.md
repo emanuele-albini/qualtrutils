@@ -17,10 +17,16 @@ This package allows the creation of questions based on an existing template (i.e
 
 ## Installation
 
-Simply run the following command.
+Using PIP:
 
 ```bash
 pip install qualtrutils
+```
+
+Using CONDA:
+
+```bash
+conda install -c emanuele-albini qualtrutils
 ```
 
 #### For developers
@@ -44,6 +50,8 @@ SURVEY_ID = "SV_XXXXXXXXXXXXX"
 ```
 
 The configuration saved in `~\.qualtrutils\qualtrics.toml` will be used as default in `QualtricsSurvey` constructor.
+
+This configuration it's optional, the settigs can be directly passed to `QualtricsSurvey` at runtime.
 
 ## Usage example
 
