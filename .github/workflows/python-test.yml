@@ -33,7 +33,6 @@ jobs:
         python -m pip install -e .
     - name: Create configuration file
       run: |
-        mkdir ~/.qualtrutils
         printf 'API_URL = "${{ secrets.QUALTRICS_API_URL }}"\nAPI_TOKEN = "${{ secrets.QUALTRICS_API_TOKEN }}"' > ~/.qualtrutils/qualtrics.toml
     - name: Test with pytest
       run: |
