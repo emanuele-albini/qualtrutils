@@ -95,6 +95,7 @@ jobs:
     needs: [documentation, pypi]
     
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest]
         pythonVersion: [3.6, 3.7, 3.8, 3.9]
